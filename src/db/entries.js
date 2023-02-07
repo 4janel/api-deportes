@@ -1,0 +1,3 @@
+const entries = [];
+
+export { entries };
