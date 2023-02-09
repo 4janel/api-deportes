@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { newAuth } from "../controllers/authControllers.js";
+import { newAuth } from "../controllers/auth/authControllers.js";
 
 const router = Router();
 
@@ -130,6 +130,62 @@ const router = Router();
  *        id: 1
  *        idProducto: 3
  *        cantidadIngreso: 35
+ *    Marca:
+ *      type: object
+ *      properties:
+ *        idMarca:
+ *          type: integer
+ *          description: ID de marca
+ *        nombreMarca:
+ *          type: string
+ *          description: nombre de la marca
+ *        eliminado:
+ *          type: boolean
+ *          description: No eliminada por defecto.
+ *      required:
+ *          - nombreMarca
+ *      example:
+ *        idMarca: 1
+ *        nombreMarca: adidas
+ *        eliminado: false
+ *    NuevaMarca:
+ *      type: object
+ *      properties:
+ *        nombre:
+ *          type: string
+ *          description: Nombre de la marca
+ *      required:
+ *        - nombreMarca
+ *      example:
+ *        nombreMarca: adidas
+ *    Linea:
+ *      type: object
+ *      properties:
+ *        idLinea:
+ *          type: integer
+ *          description: ID de la linea
+ *        nombreLinea:
+ *          type: string
+ *          description: nombre de la linea
+ *        eliminado:
+ *          type: boolean
+ *          description: No eliminada por defecto.
+ *      required:
+ *          - nombreLinea
+ *      example:
+ *        idLinea: 1
+ *        nombreLinea: playera
+ *        eliminado: false
+ *    NuevaLinea:
+ *      type: object
+ *      properties:
+ *        nombreLinea:
+ *          type: string
+ *          description: Nombre de la linea
+ *      required:
+ *        - nombreLinea
+ *      example:
+ *        nombreLinea: playera
  */
 
 /**

@@ -1,0 +1,3 @@
+const brands = [];
+
+export { brands };

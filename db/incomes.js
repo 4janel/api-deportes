@@ -1,0 +1,3 @@
+const incomes = [];
+
+export { incomes };

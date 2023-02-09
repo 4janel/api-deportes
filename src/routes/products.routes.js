@@ -1,14 +1,16 @@
 import { Router } from "express";
-import { verifyToken } from "../controllers/authControllers.js";
+import { verifyToken } from "../controllers/auth/authControllers.js";
 import {
+  createProduct,
+  editProduct,
+  softDelete,
+  deleteProduct,
   getProducts,
   getProductById,
   getActives,
   getProductByBrands,
   getProductByLine,
-  getEntries,
-  getSales,
-} from "../controllers/searchControllers.js";
+} from "../controllers/products/productsControllers.js";
 
 const router = Router();
 
@@ -19,7 +21,7 @@ const router = Router();
  *    security:
  *      - bearerAuth: []
  *    summary: Retorna todos los productos del inventario
- *    tags: [Productos]
+ *    tags: [Producto]
  *    responses:
  *      200:
  *        description: se han obtenido todos los productos
@@ -40,7 +42,7 @@ router.get("/productos", verifyToken, getProducts);
  *    security:
  *      - bearerAuth: []
  *    summary: Retorna todos los productos activos
- *    tags: [Productos]
+ *    tags: [Producto]
  *    responses:
  *      200:
  *        description: se han obtenido todos los productos activos
@@ -61,7 +63,7 @@ router.get("/productos/activos", verifyToken, getActives);
  *    security:
  *      - bearerAuth: []
  *    summary: Retorna un producto según su ID
- *    tags: [Productos]
+ *    tags: [Producto]
  *    parameters:
  *      - in: path
  *        name: id
@@ -89,7 +91,7 @@ router.get("/productos/:id", verifyToken, getProductById);
  *    security:
  *      - bearerAuth: []
  *    summary: Retorna los productos según el ID de marca
- *    tags: [Productos]
+ *    tags: [Producto]
  *    parameters:
  *      - in: path
  *        name: id
@@ -118,7 +120,7 @@ router.get("/productos/marca/:id", verifyToken, getProductByBrands);
  *    security:
  *      - bearerAuth: []
  *    summary: Retorna los productos según el ID de linea
- *    tags: [Productos]
+ *    tags: [Producto]
  *    parameters:
  *      - in: path
  *        name: id
@@ -142,44 +144,104 @@ router.get("/productos/linea/:id", verifyToken, getProductByLine);
 
 /**
  * @swagger
- * /ventas:
- *  get:
+ * /productos/eliminar/{id}:
+ *  delete:
  *    security:
  *      - bearerAuth: []
- *    summary: Retorna el historial de las ventas
- *    tags: [Ventas]
+ *    summary: Elimina un producto (eliminado suave)
+ *    tags: [Producto]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: ID Producto
  *    responses:
  *      200:
- *        description: se han obtenido todos las ventas
+ *        description: Se ha eliminado de manera temporal
  *        content:
  *          application/json:
  *            schema:
- *              type: array
- *              items:
- *                $ref: '#/components/schemas/Venta'
- *
+ *              type: object
+ *              $ref: '#/components/schemas/Producto'
+ *      404:
+ *        description: Producto no encontrado.
  */
-router.get("/ventas", verifyToken, getSales);
+router.delete("/productos/eliminar/:id", verifyToken, softDelete);
 
 /**
  * @swagger
- * /ingresos:
- *  get:
+ * /productos/{id}:
+ *  delete:
  *    security:
  *      - bearerAuth: []
- *    summary: Retorna el historial de ingresos
- *    tags: [Ingresos]
+ *    summary: Elimina un producto
+ *    tags: [Producto]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: ID Producto
  *    responses:
  *      200:
- *        description: Se ha obtenido el historial de ingresos
- *        content:
- *          application/json:
- *            schema:
- *              type: array
- *              items:
- *                $ref: '#/components/schemas/Ingreso'
- *
+ *        description: Se ha eliminado el producto
+ *      404:
+ *        description: Producto no encontrado.
  */
-router.get("/ingresos", verifyToken, getEntries);
+router.delete("/productos/:id", verifyToken, deleteProduct);
+
+/**
+ * @swagger
+ * /productos:
+ *  post:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Agrega productos al inventario
+ *    tags: [Producto]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            $ref: '#/components/schemas/Producto'
+ *    responses:
+ *      201:
+ *        description: Producto agregado.
+ */
+router.post("/productos", verifyToken, createProduct);
+
+/**
+ * @swagger
+ * /productos/{id}:
+ *  put:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Actualiza un producto
+ *    tags: [Producto]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *        description: ID del producto
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            $ref: '#/components/schemas/Producto'
+ *    responses:
+ *      200:
+ *        description: Producto actualizado
+ *      404:
+ *        description: Producto no encontrado
+ */
+router.put("/productos/:id", verifyToken, editProduct);
 
 export default router;
